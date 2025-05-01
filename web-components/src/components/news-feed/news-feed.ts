@@ -1,5 +1,6 @@
 import { LitElement, html, css } from "lit"
 import { customElement, property, state } from "lit/decorators.js"
+import { NewsData, ProcessedNewsItem } from "../../types/news-feed"
 
 /**
  * `news-feed` - A web component that displays news items from a JSON feed.
@@ -26,8 +27,8 @@ export class NewsFeed extends LitElement {
   // Internal state properties using the @state decorator
   @state() private _isLoading = false
   @state() private _error: string | null = null
-  @state() private _rawData: object | null = null
-  @state() private _processedNewsItems: any[] = []
+  @state() private _rawData: NewsData | null = null
+  @state() private _processedNewsItems: ProcessedNewsItem[] = []
 
   static override styles = css`
     /* Import Inter font */
