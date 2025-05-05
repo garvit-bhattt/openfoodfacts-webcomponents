@@ -238,7 +238,7 @@ export class NewsFeed extends LitElement {
 
       // Now process the raw data into the format we need
       this._processAndRender()
-    } catch (error) {
+    } catch (error: any) {
       console.error("[NewsFeed] Error during fetch or initial processing:", error)
       this._error = `Failed to load or process news: ${error.message}`
       this._isLoading = false
@@ -272,7 +272,7 @@ export class NewsFeed extends LitElement {
       this._isLoading = false
       this._error = null
       this.requestUpdate()
-    } catch (error) {
+    } catch (error: any) {
       console.error("[NewsFeed] Error during data processing:", error)
       this._error = `Failed to process news data: ${error.message}`
       this._isLoading = false
@@ -280,7 +280,7 @@ export class NewsFeed extends LitElement {
     }
   }
 
-  _processNewsData(rawData) {
+  _processNewsData(rawData: NewsData): ProcessedNewsItem[] {
     const processedItems = []
     const currentLang = this._getLang() // e.g., 'en'
     const currentFullLang = this._getFullLang() // e.g., 'en-US'
@@ -359,7 +359,7 @@ export class NewsFeed extends LitElement {
   }
 
   // --- Filtering Logic ---
-  _filterNews(processedNewsItems) {
+  _filterNews(processedNewsItems: ProcessedNewsItem[]): ProcessedNewsItem[] {
     const now = new Date()
     // Get filters from properties at the time of filtering
     const currentLang = this._getLang()
@@ -392,11 +392,11 @@ export class NewsFeed extends LitElement {
         console.warn(`[NewsFeed] Invalid end_date format for item ${item.id}: ${item.end_date}`)
       }
 
-      if (startDate && !isNaN(startDate) && now < startDate) {
+      if (startDate && startDate !== null && now < startDate) {
         return false // Not started yet
       }
 
-      if (endDate && !isNaN(endDate)) {
+      if (endDate && endDate !== null) {
         // Set end date to end of the day for comparison (in UTC)
         endDate.setUTCHours(23, 59, 59, 999)
         if (now > endDate) {
@@ -428,7 +428,7 @@ export class NewsFeed extends LitElement {
 
       // 5. Check App Version (using min/max versions from item)
       if (currentAppVersion) {
-        const versionCompare = (v1, v2) => {
+        const versionCompare = (v1: string | undefined, v2: string | undefined) => {
           const parts1 = (v1 || "").split(/[.-]/)
           const parts2 = (v2 || "").split(/[.-]/)
           for (let i = 0; i < Math.max(parts1.length, parts2.length); i++) {
@@ -462,7 +462,7 @@ export class NewsFeed extends LitElement {
 
   // --- Lit Render Methods ---
 
-  _renderNewsItem(item) {
+  _renderNewsItem(item: ProcessedNewsItem) {
     const hasUrl = item.url && item.url.trim() !== ""
     const placeholderId = `placeholder-${item.id || Math.random().toString(36).substring(7)}`
 
@@ -476,9 +476,10 @@ export class NewsFeed extends LitElement {
             src=${item.icon_url}
             alt=""
             class="icon"
-            @error=${(e) => {
-              e.target.style.display = "none"
-              this.shadowRoot.querySelector(`#${placeholderId}`).style.display = "flex"
+            @error=${(e: Event) => {
+              ;(e.target as HTMLImageElement).style.display = "none"
+              const element = this.shadowRoot!.querySelector(`#${placeholderId}`)! as HTMLElement
+              element.style.display = "flex"
             }}
           />
           <div id=${placeholderId} class="placeholder-icon" style="display: none;">
