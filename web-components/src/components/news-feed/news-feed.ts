@@ -381,14 +381,14 @@ export class NewsFeed extends LitElement {
       let startDate = null
       try {
         startDate = item.start_date ? new Date(item.start_date.replace(" ", "T") + "Z") : null // Assume UTC if no timezone
-      } catch (_) {
+      } catch {
         console.warn(`[NewsFeed] Invalid start_date format for item ${item.id}: ${item.start_date}`)
       }
 
       let endDate = null
       try {
         endDate = item.end_date ? new Date(item.end_date.replace(" ", "T") + "Z") : null // Assume UTC
-      } catch (_) {
+      } catch {
         console.warn(`[NewsFeed] Invalid end_date format for item ${item.id}: ${item.end_date}`)
       }
 
