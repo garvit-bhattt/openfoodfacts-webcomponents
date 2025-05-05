@@ -500,7 +500,7 @@ export class NewsFeed extends LitElement {
     return hasUrl
       ? html`
           <a
-            href=${item.url}
+            href=${item.url ?? ""}
             target="_blank"
             rel="noopener noreferrer"
             class="news-item-wrapper"
